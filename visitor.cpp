@@ -129,7 +129,7 @@ int PrintVisitor::visit(BinaryExp *exp)
 }
 int PrintVisitor::visit(StringExp *exp)
 {
-    cout << "" << exp->value << "\"";
+    cout << "" << exp->value << "";
     return 0;
 }
 
@@ -164,14 +164,29 @@ void PrintVisitor::visit(AssignStatement *stm)
 void PrintVisitor::visit(PrintStatement *stm)
 {
     cout << "println!(";
-    if (stm->e != nullptr)
+
+    // Visitar la primera expresión
+    if (stm->e1 != nullptr)
     {
-        stm->e->accept(this);
+        stm->e1->accept(this);
     }
     else
     {
-        cout << "Error: expresión no válida.";
+        cout << "Error: expresión 1 no válida.";
     }
+
+    cout << ", ";
+
+    // Visitar la segunda expresión
+    if (stm->e2 != nullptr)
+    {
+        stm->e2->accept(this);
+    }
+    else
+    {
+        cout << "Error: expresión 2 no válida.";
+    }
+
     cout << ");";
 }
 
@@ -322,10 +337,10 @@ void PrintVisitor::visit(FunDecList *stm)
 
 void PrintVisitor::visit(ReturnStatement *s)
 {
-    //cout << "return (";
+    // cout << "return (";
     if (s->e != NULL)
         s->e->accept(this);
-    //cout << ")";
+    // cout << ")";
     return;
 }
 

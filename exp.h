@@ -67,12 +67,12 @@ public:
 class StringExp : public Exp
 {
 public:
-    std::string value;                   
-    StringExp(std::string v);            
-    int accept(Visitor *visitor);        
-    ImpValue accept(ImpValueVisitor *v); 
-    ImpType accept(TypeVisitor *v);      
-    ~StringExp();                        
+    std::string value;
+    StringExp(std::string v);
+    int accept(Visitor *visitor);
+    ImpValue accept(ImpValueVisitor *v);
+    ImpType accept(TypeVisitor *v);
+    ~StringExp();
 };
 
 class BoolExp : public Exp
@@ -145,8 +145,9 @@ public:
 class PrintStatement : public Stm
 {
 public:
-    Exp *e;
-    PrintStatement(Exp *e);
+    Exp *e1;
+    Exp *e2;
+    PrintStatement(Exp *e1, Exp *e2);
     int accept(Visitor *visitor);
     void accept(ImpValueVisitor *v);
     void accept(TypeVisitor *v);

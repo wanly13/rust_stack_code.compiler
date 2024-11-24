@@ -327,8 +327,10 @@ void ImpInterpreter::visit(AssignStatement *s)
 
 void ImpInterpreter::visit(PrintStatement *s)
 {
-    ImpValue v = s->e->accept(this);
-    cout << v << endl;
+    ImpValue v1 = s->e1->accept(this);
+    ImpValue v2 = s->e2->accept(this);
+    
+    cout << v1 << ", " << v2 << endl;
     return;
 }
 

@@ -45,10 +45,11 @@ AssignStatement::~AssignStatement()
 {
     delete rhs;
 }
-PrintStatement::PrintStatement(Exp *e) : e(e) {}
+PrintStatement::PrintStatement(Exp *e1, Exp *e2) : e1(e1), e2(e2) {}
 PrintStatement::~PrintStatement()
 {
-    delete e;
+    delete e1;
+    delete e1;
 }
 
 IfStatement::IfStatement(Exp *c, Body *t, Body *e) : condition(c), then(t), els(e) {}

@@ -189,9 +189,12 @@ void ImpCodeGen::visit(AssignStatement *s)
 
 void ImpCodeGen::visit(PrintStatement *s)
 {
-  s->e->accept(this);
+  s->e1->accept(this);
+
+  s->e2->accept(this);
+
   code << "print" << endl;
-  ;
+
   return;
 }
 
@@ -320,10 +323,11 @@ int ImpCodeGen::visit(NumberExp *e)
   codegen(nolabel, "push ", e->value);
   return 0;
 }
-int ImpCodeGen::visit(StringExp *e) {
-    
-    codegen(nolabel, "push ", "\"" + e->value + "\""); 
-    return 0;
+int ImpCodeGen::visit(StringExp *e)
+{
+
+  codegen(nolabel, "push ", "\"" + e->value + "\"");
+  return 0;
 }
 
 int ImpCodeGen::visit(BoolExp *e)

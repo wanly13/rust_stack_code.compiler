@@ -312,21 +312,34 @@ Stm *Parser::parseStatement()
             cout << "Error: se esperaba un '(' después de 'print'." << endl;
             exit(1);
         }
-        list<Exp *> args;
+        Exp *exp1 = nullptr;
+        Exp *exp2 = nullptr;
 
-        args.push_back(parseCExp());
-        
-        while (match(Token::COMA))
+        if (match(Token::STRING))
         {
-            args.push_back(parseCExp());
+            exp1 = new StringExp(previous->text);
         }
-
-        if (!match(Token::PD))
+        else
         {
-            cout << "Error: se esperaba un ')' después de la expresión." << endl;
+            cout << "Error: se esperaba un STRING en println!." << endl;
             exit(1);
         }
-        s = new PrintStatement(e);
+        if (match(Token::COMA))
+        {
+            exp2 = parseCExp(); // Parseamos la segunda expresión
+        }
+        else
+        {
+            cout << "Error: se esperaba otro argumento en printf." << endl;
+            exit(1);
+        }
+        if (!match(Token::PD))
+        {
+            cout << "Error: se esperaba ')' después de los argumentos de 'printf'." << endl;
+            exit(1);
+        }
+
+        s = new PrintStatement(exp1, exp2);
     }
     else if (match(Token::IF))
     {
