@@ -1,0 +1,44 @@
+Program ::= VarDeclList FunDeclList // Declaraciones de variables y funciones como en la original
+
+VarDeclList ::= (VarDecl)*
+FunDeclList ::= (FunDecl)*
+
+FunDec ::= "fn" id "(" [ParamDeclList] ")" ["->" Type] Body
+
+Body ::= "{" VarDeclList StmtList "}"
+
+ParamDeclList ::= id ":" Type   ("," id ":" Type  )*
+-- ParamDeclList ::= ParamDecl ("," ParamDecl)* 
+-- ParamDecl ::= id ":" Type 
+
+VarDec ::= "let" "mut" id ":" Type ";" | "const" id ":" Type "=" CExp ";"
+-- VarDec ::= "let" ["mut"] id ":" Type ["=" CExp] ";"
+
+Type ::= "i32" | "f32" | "bool" | "String" | "&str"
+
+VarList ::= // No hay ya que RUST no admite varios al mismo tiepo
+
+StmtList ::= Stmt (";" Stmt)* 
+
+Stmt ::= id "=" CExp ";" 
+       | "println!" "(" CExp ")" ";"
+       | "if" CExp Body ["else" Body]
+       | "while" CExp Body
+       | "for" id "in" CExp ".." CExp Body
+       | ["return" [CExp] ";"] // En este caso el return es opcional
+       | Comment
+
+CExp ::= Exp [("==" | "!=" | "<" | ">" | "<=" | ">=") Exp]
+
+Exp ::= Term (("+" | "-") Term)*
+
+Term ::= Factor (("*" | "/") Factor)*
+
+Factor ::= "(" CExp ")" | id| Num| Bool| String | id "(" [ArgList] ")"
+
+ArgList ::= CExp ("," CExp)*
+
+Num ::= [0-9]+
+Bool ::= "true" | "false"
+String ::= "\"" .* "\""
+Comment ::= "//" .* "\n" | "/*" .* "*/"
