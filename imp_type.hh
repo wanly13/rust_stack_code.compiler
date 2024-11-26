@@ -12,8 +12,8 @@ using namespace std;
 
 class ImpType {
 public:
-  enum TType { NOTYPE=0, VOID, INT, BOOL, FUN };
-  static const char* type_names[5];
+  enum TType { NOTYPE=0, VOID, INT, BOOL, FUN , I32, I64};
+  static const char* type_names[7];
   TType ttype;
   vector<TType> types;
   bool match(const ImpType&);

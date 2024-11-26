@@ -120,8 +120,8 @@ void ImpTypeChecker::visit(VarDec *vd)
     cout << "Tipo invalido: " << vd->type << endl;
     exit(0);
   }
-
   env.add_var(vd->name, type);
+  cout << "save: " << vd->name << " type: " << type << endl;
   dir++;
   if (dir > max_dir)
     max_dir = dir;
@@ -189,10 +189,12 @@ void ImpTypeChecker::visit(AssignStatement *s)
     exit(0);
   }
   sp_decr(1);
-  ImpType var_type = env.lookup(s->id);
+  ImpType var_type = env.lookup(s->id); // Me ha traido la posicion
+
+ 
   if (!type.match(var_type))
   {
-    cout << "Tipo incorrecto en Assign a " << s->id << endl;
+    cout << "Tipo incorrecto en Assign a " << s->id << " : " << var_type.ttype << endl;
   }
   return;
 }

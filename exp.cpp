@@ -49,7 +49,7 @@ PrintStatement::PrintStatement(Exp *e1, Exp *e2) : e1(e1), e2(e2) {}
 PrintStatement::~PrintStatement()
 {
     delete e1;
-    delete e1;
+    delete e2;
 }
 
 IfStatement::IfStatement(Exp *c, Body *t, Body *e) : condition(c), then(t), els(e) {}
