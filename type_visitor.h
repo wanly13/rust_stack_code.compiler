@@ -23,6 +23,8 @@ public:
   
   virtual ImpType visit(BinaryExp* e) = 0;
   virtual ImpType visit(NumberExp* e) = 0;
+  virtual ImpType visit(i32Exp* e) = 0;
+  virtual ImpType visit(i64Exp* e) = 0;
   virtual ImpType visit(StringExp* e) = 0;
   virtual ImpType visit(BoolExp* e) = 0;
   virtual ImpType visit(IdentifierExp* e) = 0;

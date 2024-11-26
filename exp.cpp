@@ -4,6 +4,13 @@ using namespace std;
 IFExp::IFExp(Exp *cond, Exp *l, Exp *r) : cond(cond), left(l), right(r) {}
 BinaryExp::BinaryExp(Exp *l, Exp *r, BinaryOp op) : left(l), right(r), op(op) {}
 NumberExp::NumberExp(int v) : value(v) {}
+
+i32Exp::i32Exp(int v) : value(v) {}
+i32Exp::~i32Exp() {}
+
+i64Exp::i64Exp(long v) : value(v) {}
+i64Exp::~i64Exp() {}
+
 StringExp::StringExp(string v) : value(v) {}
 BoolExp::BoolExp(bool v) : value(v) {}
 IdentifierExp::IdentifierExp(const string &n) : name(n) {}
@@ -166,7 +173,7 @@ string Exp::binopToChar(BinaryOp op)
     case GT_OP:
         c = ">";
         break;
-    
+
     case LE_OP:
         c = "<=";
         break;

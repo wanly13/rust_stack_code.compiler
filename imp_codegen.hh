@@ -40,6 +40,8 @@ public:
 
   int visit(BinaryExp* e);
   int visit(NumberExp* e);
+  int visit(i32Exp* e);
+  int visit(i64Exp* e);
   int visit(StringExp* e);
   int visit(BoolExp* e);
   int visit(IdentifierExp* e);

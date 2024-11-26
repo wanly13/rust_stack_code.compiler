@@ -28,6 +28,8 @@ private:
   ImpType booltype;
   ImpType stringtype;
   ImpType inttype;
+  ImpType i32type;
+  ImpType i64type;
   ImpType voidtype;
   ImpType maintype;
 
@@ -56,6 +58,8 @@ public:
   
   ImpType visit(BinaryExp* e);
   ImpType visit(NumberExp* e);
+  ImpType visit(i32Exp* e);
+  ImpType visit(i64Exp* e);
   ImpType visit(StringExp* e);
   ImpType visit(BoolExp* e);
   ImpType visit(IdentifierExp* e);

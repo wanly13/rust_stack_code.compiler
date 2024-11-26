@@ -87,6 +87,27 @@ public:
     ImpType accept(TypeVisitor *v);
     ~BoolExp();
 };
+class i32Exp : public Exp
+{
+public:
+    int value;
+    i32Exp(int v);
+    int accept(Visitor *visitor);
+    ImpValue accept(ImpValueVisitor *v);
+    ImpType accept(TypeVisitor *v);
+    ~i32Exp();
+};
+class i64Exp : public Exp
+{
+public:
+    long value;
+    i64Exp(long v);
+    int accept(Visitor *visitor);
+    ImpValue accept(ImpValueVisitor *v);
+    ImpType accept(TypeVisitor *v);
+    ~i64Exp();
+};
+
 
 class IdentifierExp : public Exp
 {

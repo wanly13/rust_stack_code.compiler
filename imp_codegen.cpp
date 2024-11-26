@@ -323,6 +323,16 @@ int ImpCodeGen::visit(NumberExp *e)
   codegen(nolabel, "push ", e->value);
   return 0;
 }
+int ImpCodeGen::visit(i32Exp *e)
+{
+  codegen(nolabel, "push ", e->value);
+  return 0;
+}
+int ImpCodeGen::visit(i64Exp *e)
+{
+  codegen(nolabel, "push ", e->value);
+  return 0;
+}
 int ImpCodeGen::visit(StringExp *e)
 {
 

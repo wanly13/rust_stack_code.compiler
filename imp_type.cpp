@@ -1,18 +1,18 @@
 #include "imp_type.hh"
 
-const char *ImpType::type_names[7] = {"notype", "void", "int", "bool", "fun", "i32", "i64"};
+const char *ImpType::type_names[7] = {"notype", "void", "int", "bool", "fun", "i32", "i64"}; //  // 7
 
 bool ImpType::match(const ImpType &t)
 {
   cout << this->ttype << " : " << t.ttype << endl;
   if (this->ttype != t.ttype)
   {
-   
+
     return false;
   }
   if (this->ttype == ImpType::FUN)
   {
-   
+
     if (t.types.size() != this->types.size())
       return false;
     for (int i = 0; i < this->types.size(); i++)
@@ -26,9 +26,10 @@ bool ImpType::set_basic_type(string s)
 {
   TType tt;
   bool ret = true;
-  
+
   tt = string_to_type(s);
-  if (tt == ImpType::NOTYPE) ret = false;
+  if (tt == ImpType::NOTYPE)
+    ret = false;
   this->ttype = tt;
   return ret;
 }
@@ -38,9 +39,9 @@ bool ImpType::set_basic_type(TType tt)
   bool ret = true;
   switch (tt)
   {
-  /* case ImpType::INT:
+  case ImpType::INT:
   case ImpType::BOOL:
-  case ImpType::VOID: */
+  case ImpType::VOID:
   case ImpType::I32:
   case ImpType::I64:
     this->ttype = tt;
@@ -62,7 +63,7 @@ bool ImpType::set_fun_type(list<string> slist, string s)
   {
     ImpType type;
     type.set_basic_type(*it);
-    if (type.ttype == ImpType::I32 || type.ttype == ImpType::I64 || type.ttype == ImpType::BOOL)
+    if (type.ttype == ImpType::I32 || type.ttype == ImpType::I64 || type.ttype == ImpType::INT || type.ttype == ImpType::BOOL)
       types.push_back(type.ttype);
     else
     {
@@ -87,13 +88,15 @@ bool ImpType::set_fun_type(list<string> slist, string s)
 
 ImpType::TType ImpType::string_to_type(string s)
 {
-  cout << "S" << s  << endl;
+  cout << "S" << s << endl;
   TType tt;
-  if (s.compare("i32") == 0)
+  if (s.compare("int") == 0)
+    tt = ImpType::INT;
+  else if (s.compare("i32") == 0)
     tt = ImpType::I32;
   else if (s.compare("i64") == 0)
     tt = ImpType::I64;
-  else if (s.compare("bool") == 0) 
+  else if (s.compare("bool") == 0)
     tt = ImpType::BOOL;
   /* else if (s.compare("void") == 0)
     tt = ImpType::VOID; */

@@ -1,10 +1,13 @@
 #include "imp_type_checker.hh"
 
-ImpTypeChecker::ImpTypeChecker() : inttype(), booltype(), voidtype()
+ImpTypeChecker::ImpTypeChecker() : inttype(), i32type(),i64type(),booltype(), voidtype()
 {
   inttype.set_basic_type("int");
-  booltype.set_basic_type("bool");
+  i32type.set_basic_type("i32");
+  i64type.set_basic_type("i64");
+  
   stringtype.set_basic_type("string");
+  booltype.set_basic_type("bool");
   voidtype.set_basic_type("void");
   list<string> noparams;
   maintype.set_fun_type(noparams, "void");
@@ -297,10 +300,20 @@ ImpType ImpTypeChecker::visit(NumberExp *e)
   sp_incr(1);
   return inttype;
 }
+ImpType ImpTypeChecker::visit(i32Exp *e)
+{
+  sp_incr(1);
+  return i32type;
+}
+ImpType ImpTypeChecker::visit(i64Exp *e)
+{
+  sp_incr(1);
+  return i64type;
+}
 ImpType ImpTypeChecker::visit(StringExp *e)
 {
   sp_incr(1);
-  return inttype;
+  return stringtype;
 }
 ImpType ImpTypeChecker::visit(BoolExp *e)
 {

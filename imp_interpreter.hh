@@ -35,6 +35,8 @@ public:
   ImpValue visit(BinaryExp* e);
   ImpValue visit(BoolExp* e);
   ImpValue visit(NumberExp* e);
+  ImpValue visit(i32Exp* e);
+  ImpValue visit(i64Exp* e);
   ImpValue visit(StringExp* e);
   ImpValue visit(IdentifierExp* e);
   ImpValue visit(IFExp* e);

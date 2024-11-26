@@ -4,7 +4,8 @@
 #include "scanner.h"
 #include "exp.h"
 #include "parser.h"
-
+#include <limits> // Para std::numeric_limits
+#include <string>
 using namespace std;
 // Inicio del Programa
 Program *Parser::parseProgram()
@@ -555,8 +556,19 @@ Exp *Parser::parseFactor()
     else if (match(Token::NUM))
     {
 
-        return new NumberExp(stoi(previous->text));
+        long long numero = std::stoll(previous->text); // Convierte el texto a long long
+
+        // Verifica si el número cabe en un i32
+        if (numero <= std::numeric_limits<int>::max() && numero >= std::numeric_limits<int>::min())
+        {
+            return new i32Exp(static_cast<int>(numero)); // Crea un i32Exp
+        }
+        else
+        {
+            return new i64Exp(numero); // Crea un i64Exp
+        }
     }
+
     else if (match(Token::STRING))
     {
         cout << "STRING " << endl;

@@ -17,6 +17,14 @@ int NumberExp::accept(Visitor *visitor)
 {
     return visitor->visit(this);
 }
+int i32Exp::accept(Visitor *visitor)
+{
+    return visitor->visit(this);
+}
+int i64Exp::accept(Visitor *visitor)
+{
+    return visitor->visit(this);
+}
 int StringExp::accept(Visitor *visitor)
 {
     return visitor->visit(this);
@@ -138,6 +146,18 @@ int PrintVisitor::visit(NumberExp *exp)
     cout << exp->value;
     return 0;
 }
+
+int PrintVisitor::visit(i32Exp *exp)
+{
+    cout << exp->value;
+    return 0;
+}
+int PrintVisitor::visit(i64Exp *exp)
+{
+    cout << exp->value;
+    return 0;
+}
+
 
 int PrintVisitor::visit(BoolExp *exp)
 {

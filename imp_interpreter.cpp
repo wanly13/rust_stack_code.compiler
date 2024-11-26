@@ -14,7 +14,14 @@ ImpValue NumberExp::accept(ImpValueVisitor *v)
 {
     return v->visit(this);
 }
-
+ImpValue i32Exp::accept(ImpValueVisitor *v)
+{
+    return v->visit(this);
+}
+ImpValue i64Exp::accept(ImpValueVisitor *v)
+{
+    return v->visit(this);
+}
 ImpValue StringExp::accept(ImpValueVisitor *v)
 {
     return v->visit(this);
@@ -45,6 +52,14 @@ ImpType BoolExp::accept(TypeVisitor *v)
 }
 
 ImpType NumberExp::accept(TypeVisitor *v)
+{
+    return v->visit(this);
+}
+ImpType i32Exp::accept(TypeVisitor *v)
+{
+    return v->visit(this);
+}
+ImpType i64Exp::accept(TypeVisitor *v)
 {
     return v->visit(this);
 }
@@ -472,6 +487,20 @@ ImpValue ImpInterpreter::visit(NumberExp *e)
 {
     ImpValue v;
     v.set_default_value(TINT);
+    v.int_value = e->value;
+    return v;
+}
+ImpValue ImpInterpreter::visit(i32Exp *e)
+{
+    ImpValue v;
+    v.set_default_value(TI32);
+    v.int_value = e->value;
+    return v;
+}
+ImpValue ImpInterpreter::visit(i64Exp *e)
+{
+    ImpValue v;
+    v.set_default_value(TI64);
     v.int_value = e->value;
     return v;
 }

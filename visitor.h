@@ -7,6 +7,8 @@
 class BinaryExp;
 class NumberExp;
 class BoolExp;
+class i32Exp;
+class i64Exp;
 class IFExp;
 class IdentifierExp;
 class AssignStatement;
@@ -31,6 +33,8 @@ public:
     virtual int visit(BinaryExp* exp) = 0;
     virtual int visit(NumberExp* exp) = 0;
     virtual int visit(StringExp* exp) = 0;
+    virtual int visit(i32Exp* exp) = 0;
+    virtual int visit(i64Exp* exp) = 0;
     virtual int visit(BoolExp* exp) = 0;
     virtual int visit(IdentifierExp* exp) = 0;
     virtual int visit(FCallExp* exp) = 0;
@@ -56,6 +60,8 @@ public:
     int visit(IFExp* exp) override;
     int visit(BinaryExp* exp) override;
     int visit(NumberExp* exp) override;
+    int visit(i32Exp* exp) override;
+    int visit(i64Exp* exp) override;
     int visit(StringExp* exp) override;
     int visit(BoolExp* exp) override;
     int visit(IdentifierExp* exp) override;
