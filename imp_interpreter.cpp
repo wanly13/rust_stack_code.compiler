@@ -243,11 +243,11 @@ void ImpInterpreter::visit(Program *p)
     FunDec *main_dec = fdecs.lookup("main");
     retcall = false;
     main_dec->body->accept(this);
-   /*  if (main_dec->rtype != "void" && !retcall)
-    {
-        cout << "Error: Funcion main no ejecuto RETURN" << endl;
-        exit(0);
-    } */
+    /*  if (main_dec->rtype != "void" && !retcall)
+     {
+         cout << "Error: Funcion main no ejecuto RETURN" << endl;
+         exit(0);
+     } */
 }
 
 void ImpInterpreter::visit(Body *b)
@@ -311,7 +311,7 @@ void ImpInterpreter::visit(FunDec *fd)
 
 void ImpInterpreter::visit(StatementList *s)
 {
-    cout << "StatementListInterpreter" << endl;
+    cout << "$StatementList" << endl;
     list<Stm *>::iterator it;
     for (it = s->stms.begin(); it != s->stms.end(); ++it)
     {
@@ -349,26 +349,25 @@ void ImpInterpreter::visit(PrintStatement *s)
     ImpValue v1 = s->e1->accept(this);
     ImpValue v2 = s->e2->accept(this);
 
-    cout << v1 << ", " << v2 << endl;
+    cout << v1.string_value << ", " << v2 << endl;
     return;
 }
 
 void ImpInterpreter::visit(IfStatement *s)
 {
+    cout << "$IfStatement" << endl;
     ImpValue v = s->condition->accept(this);
+    cout << v.bool_value << endl;
+    cout << v.type << endl;
     if (v.type != TBOOL)
     {
         cout << "Type error en If: esperaba bool en condicional" << endl;
         exit(0);
     }
     if (v.bool_value)
-    {
         s->then->accept(this);
-    }
     else
-    {
         s->els->accept(this);
-    }
     return;
 }
 
@@ -433,10 +432,12 @@ void ImpInterpreter::visit(ForStatement *fs)
 
 ImpValue ImpInterpreter::visit(BinaryExp *e)
 {
+
     ImpValue result;
     ImpValue v1 = e->left->accept(this);
     ImpValue v2 = e->right->accept(this);
-    if (v1.type != TI32 || v2.type != TI64)
+
+    if (v1.type != TI32 || v2.type != TI32)
     {
         cout << "Error de tipos: operandos en operacion binaria tienen que ser "
                 "enteros"
@@ -470,8 +471,16 @@ ImpValue ImpInterpreter::visit(BinaryExp *e)
         bv = (iv1 < iv2) ? 1 : 0;
         type = TBOOL;
         break;
+    case GT_OP:
+        bv = (iv1 > iv2) ? 1 : 0;
+        type = TBOOL;
+        break;
     case LE_OP:
         bv = (iv1 <= iv2) ? 1 : 0;
+        type = TBOOL;
+        break;
+    case GE_OP:
+        bv = (iv1 >= iv2) ? 1 : 0;
         type = TBOOL;
         break;
     case EQ_OP:

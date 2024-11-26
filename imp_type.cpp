@@ -4,7 +4,7 @@ const char *ImpType::type_names[7] = {"notype", "void", "int", "bool", "fun", "i
 
 bool ImpType::match(const ImpType &t)
 {
-  cout << this->ttype << " : " << t.ttype << endl;
+  
   if (this->ttype != t.ttype)
   {
 
