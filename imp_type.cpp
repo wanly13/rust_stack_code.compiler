@@ -93,7 +93,7 @@ ImpType::TType ImpType::string_to_type(string s)
     tt = ImpType::I32;
   else if (s.compare("i64") == 0)
     tt = ImpType::I64;
-  else if (s.compare("bool") == 0)
+  else if (s.compare("bool") == 0) 
     tt = ImpType::BOOL;
   /* else if (s.compare("void") == 0)
     tt = ImpType::VOID; */
