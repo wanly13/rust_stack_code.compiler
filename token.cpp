@@ -52,12 +52,12 @@ std::ostream& operator << ( std::ostream& outs, const Token & tok )
         case Token::FUN : outs << "TOKEN(FUN) -> " << tok.text; break;
         case Token::ENDFUN : outs << "TOKEN(ENDFUN) -> " << tok.text; break;
         case Token::MUT : outs << "TOKEN(MUT) -> " << tok.text; break;
-        case Token::COLON : outs << "TOKEN(COLON) -> " << tok.text; break;
-        case Token::TYPE : outs << "TOKEN(TYPE) -> " << tok.text; break;
-        case Token::STRING : outs << "TOKEN(STRING) -> " << tok.text; break;
-        case Token::RANGE : outs << "TOKEN(RANGE) -> " << tok.text; break;
+        case Token::COLON : outs << "TOKEN(COLON) -> " << tok.text; break; // a : i32
+        case Token::TYPE : outs << "TOKEN(TYPE) -> " << tok.text; break; // i32 , i64
+        case Token::STRING : outs << "TOKEN(STRING) -> " << tok.text; break;  
+        case Token::RANGE : outs << "TOKEN(RANGE) -> " << tok.text; break; // for i in 1..19
         case Token::IN : outs << "TOKEN(IN) -> " << tok.text; break;
-        case Token::PLUS_ASSIGN : outs << "TOKEN(PLUS_ASSIGN) -> " << tok.text; break;
+        case Token::PLUS_ASSIGN : outs << "TOKEN(PLUS_ASSIGN) -> " << tok.text; break; //
         case Token::ARROW : outs << "TOKEN(ARROW) -> " << tok.text; break;
         default: outs << "TOKEN(UNKNOWN) -> " << tok.text; break;
     }

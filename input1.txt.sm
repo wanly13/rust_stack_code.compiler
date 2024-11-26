@@ -1,0 +1,36 @@
+start: skip
+enter 0
+alloc 0
+mark
+pusha Lmain
+call
+halt
+Lmain: skip
+enter 7
+alloc 3
+alloc 1
+store 1
+mark 1
+alloc 1
+store 2
+mark 2
+alloc 1
+store 3
+mark 3
+push  1
+storer 1
+push  10
+storer 2
+push  1000000
+storer 3
+push  20
+storer 1
+push  ""{}""
+loadr 1
+print
+push  ""{}""
+loadr 2
+print
+push  ""{}""
+loadr 3
+print

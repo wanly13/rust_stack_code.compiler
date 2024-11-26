@@ -39,6 +39,7 @@ class Environment {
                  << endl;
             exit(0);
         }
+        
         ribs.back()[var] = value;
     }
     void add_var(string var) { ribs.back()[var] = 0; }

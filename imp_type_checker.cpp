@@ -1,11 +1,11 @@
 #include "imp_type_checker.hh"
 
-ImpTypeChecker::ImpTypeChecker() : inttype(), i32type(),i64type(),booltype(), voidtype()
+ImpTypeChecker::ImpTypeChecker() : inttype(), i32type(), i64type(), booltype(), voidtype()
 {
   inttype.set_basic_type("int");
   i32type.set_basic_type("i32");
   i64type.set_basic_type("i64");
-  
+
   stringtype.set_basic_type("string");
   booltype.set_basic_type("bool");
   voidtype.set_basic_type("void");
@@ -66,10 +66,30 @@ void ImpTypeChecker::visit(Program *p)
 
 void ImpTypeChecker::visit(Body *b)
 {
+  cout << "body" << endl;
   int start_dir = dir; // added
   env.add_level();
-  b->vardecs->accept(this);
-  b->slist->accept(this);
+
+  if (b->vardecs)
+  {
+    cout << "vardecs is not null" << endl;
+    b->vardecs->accept(this);
+  }
+  else
+  {
+    cout << "vardecs is null" << endl;
+  }
+
+  if (b->slist)
+  {
+    cout << "slist is not null" << endl;
+    b->slist->accept(this);
+  }
+  else
+  {
+    cout << "slist is null" << endl;
+  }
+
   env.remove_level();
   dir = start_dir; // added
   return;
@@ -87,29 +107,42 @@ void ImpTypeChecker::visit(VarDecList *decs)
 
 void ImpTypeChecker::visit(FunDecList *s)
 {
+  cout << "FunDecList" << endl;
   list<FunDec *>::iterator it;
   for (it = s->flist.begin(); it != s->flist.end(); ++it)
   {
     add_fundec(*it);
   }
+  cout << "add_fundec" << endl;
   for (it = s->flist.begin(); it != s->flist.end(); ++it)
   {
+    cout << "por que entraria aqui" << endl;
     // added
     sp = max_sp = 0;
     dir = max_dir = 0;
+    cout << "- ------------------------- fin aqui1" << endl;
     // end-added
+
     (*it)->accept(this);
+
+    cout << "----- fin aquix1" << endl;
     FEntry fentry;
+    cout << "----- fin aquix2" << endl;
     string fname = (*it)->fname;
+    cout << "----- fin aquix3" << endl;
     fentry.fname = fname;
+    cout << "- ------------------------- fin aqui2" << endl;
     fentry.ftype = env.lookup(fname);
     fnames.push_back(fname);
     // added
     fentry.max_stack = max_sp;
     fentry.mem_locals = max_dir;
     // end added
+    cout << "- ------------------------- fin aqui3" << endl;
     ftable.add_var(fname, fentry);
+    cout << "- ------------------------- fin aqui4" << endl;
   }
+  cout << "endddddddddddddddddddddddddddddddd" << endl;
   return;
 }
 
@@ -135,7 +168,7 @@ void ImpTypeChecker::visit(VarDec *vd)
 void ImpTypeChecker::add_fundec(FunDec *fd)
 {
   ImpType funtype;
-  
+  cout << "add_fundec f" << endl;
   if (!funtype.set_fun_type(fd->types, fd->rtype))
   {
     cout << "Tipo invalido en declaracion de funcion: " << fd->fname << endl;
@@ -150,24 +183,29 @@ void ImpTypeChecker::add_fundec(FunDec *fd)
     }
     has_main = true;
   }
+  cout << "fundec13" << endl;
   env.add_var(fd->fname, funtype);
+  cout << "fundec" << endl;
   return;
 }
 
 void ImpTypeChecker::visit(FunDec *fd)
 {
+  cout << "fundec1" << endl;
   env.add_level();
   ImpType funtype = env.lookup(fd->fname);
   ImpType rtype, ptype;
   rtype.set_basic_type(funtype.types.back());
   list<string>::iterator it;
   int i = 0;
+  cout << "fundec1" << endl;
   for (it = fd->vars.begin(); it != fd->vars.end(); ++it, i++)
   {
     ptype.set_basic_type(funtype.types[i]);
     env.add_var(*it, ptype);
   }
-  env.add_var("return", rtype);
+  cout << "FUNDEC CORRECTO" << endl;
+  // env.add_var("return", rtype);
   fd->body->accept(this);
   env.remove_level();
   return;
@@ -175,10 +213,12 @@ void ImpTypeChecker::visit(FunDec *fd)
 
 void ImpTypeChecker::visit(StatementList *s)
 {
+  cout << "TypeChecker StatmentList" << endl;
   list<Stm *>::iterator it;
   for (it = s->stms.begin(); it != s->stms.end(); ++it)
   {
-    (*it)->accept(this);
+    if ((*it))
+      (*it)->accept(this);
   }
   return;
 }
@@ -194,7 +234,6 @@ void ImpTypeChecker::visit(AssignStatement *s)
   sp_decr(1);
   ImpType var_type = env.lookup(s->id); // Me ha traido la posicion
 
- 
   if (!type.match(var_type))
   {
     cout << "Tipo incorrecto en Assign a " << s->id << " : " << var_type.ttype << endl;
@@ -204,9 +243,11 @@ void ImpTypeChecker::visit(AssignStatement *s)
 
 void ImpTypeChecker::visit(PrintStatement *s)
 {
+  cout << "print" << endl;
   s->e1->accept(this);
   s->e2->accept(this);
   sp_decr(2);
+  cout << "endprint" << endl;
   return;
 }
 
@@ -238,6 +279,7 @@ void ImpTypeChecker::visit(WhileStatement *s)
 
 void ImpTypeChecker::visit(ReturnStatement *s)
 {
+  cout << "ReturnStatement" << endl;
   ImpType rtype = env.lookup("return");
   ImpType etype;
   if (s->e != NULL)
@@ -271,7 +313,7 @@ ImpType ImpTypeChecker::visit(BinaryExp *e)
 {
   ImpType t1 = e->left->accept(this);
   ImpType t2 = e->right->accept(this);
-  if (!t1.match(inttype) || !t2.match(inttype))
+  if (!t1.match(i32type) || !t2.match(i32type))
   {
     cout << "Tipos en BinExp deben de ser int" << endl;
     exit(0);
@@ -287,6 +329,8 @@ ImpType ImpTypeChecker::visit(BinaryExp *e)
     break;
   case LT_OP:
   case LE_OP:
+  case GT_OP:
+  case GE_OP:
   case EQ_OP:
     result = booltype;
     break;

@@ -171,7 +171,8 @@ void ImpCodeGen::visit(StatementList *s)
   list<Stm *>::iterator it;
   for (it = s->stms.begin(); it != s->stms.end(); ++it)
   {
-    (*it)->accept(this);
+    if ((*it))
+      (*it)->accept(this);
   }
   return;
 }
@@ -234,7 +235,7 @@ void ImpCodeGen::visit(WhileStatement *s)
 
 void ImpCodeGen::visit(ReturnStatement *s)
 {
-  // nuevo
+
   if (s->e != NULL)
   {
     VarEntry ventry = direcciones.lookup("return");
@@ -306,6 +307,12 @@ int ImpCodeGen::visit(BinaryExp *e)
     op = "lt";
     break;
   case LE_OP:
+    op = "le";
+    break;
+  case GT_OP:
+    op = "lt";
+    break;
+  case GE_OP:
     op = "le";
     break;
   case EQ_OP:

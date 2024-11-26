@@ -243,11 +243,11 @@ void ImpInterpreter::visit(Program *p)
     FunDec *main_dec = fdecs.lookup("main");
     retcall = false;
     main_dec->body->accept(this);
-    if (main_dec->rtype != "void" && !retcall)
+   /*  if (main_dec->rtype != "void" && !retcall)
     {
         cout << "Error: Funcion main no ejecuto RETURN" << endl;
         exit(0);
-    }
+    } */
 }
 
 void ImpInterpreter::visit(Body *b)
@@ -311,12 +311,16 @@ void ImpInterpreter::visit(FunDec *fd)
 
 void ImpInterpreter::visit(StatementList *s)
 {
+    cout << "StatementListInterpreter" << endl;
     list<Stm *>::iterator it;
     for (it = s->stms.begin(); it != s->stms.end(); ++it)
     {
-        (*it)->accept(this);
-        if (retcall)
-            break;
+        if ((*it))
+        {
+            (*it)->accept(this);
+            if (retcall)
+                break;
+        }
     }
     return;
 }
@@ -344,7 +348,7 @@ void ImpInterpreter::visit(PrintStatement *s)
 {
     ImpValue v1 = s->e1->accept(this);
     ImpValue v2 = s->e2->accept(this);
-    
+
     cout << v1 << ", " << v2 << endl;
     return;
 }
@@ -432,7 +436,7 @@ ImpValue ImpInterpreter::visit(BinaryExp *e)
     ImpValue result;
     ImpValue v1 = e->left->accept(this);
     ImpValue v2 = e->right->accept(this);
-    if (v1.type != TINT || v2.type != TINT)
+    if (v1.type != TI32 || v2.type != TI64)
     {
         cout << "Error de tipos: operandos en operacion binaria tienen que ser "
                 "enteros"
@@ -442,25 +446,25 @@ ImpValue ImpInterpreter::visit(BinaryExp *e)
     int iv, iv1, iv2;
     bool bv;
     ImpVType type = NOTYPE;
-    iv1 = v1.int_value;
-    iv2 = v2.int_value;
+    iv1 = v1.i32_value;
+    iv2 = v2.i32_value;
     switch (e->op)
     {
     case PLUS_OP:
         iv = iv1 + iv2;
-        type = TINT;
+        type = TI32;
         break;
     case MINUS_OP:
         iv = iv1 - iv2;
-        type = TINT;
+        type = TI32;
         break;
     case MUL_OP:
         iv = iv1 * iv2;
-        type = TINT;
+        type = TI32;
         break;
     case DIV_OP:
         iv = iv1 / iv2;
-        type = TINT;
+        type = TI32;
         break;
     case LT_OP:
         bv = (iv1 < iv2) ? 1 : 0;
@@ -477,6 +481,10 @@ ImpValue ImpInterpreter::visit(BinaryExp *e)
     }
     if (type == TINT)
         result.int_value = iv;
+    if (type == TI32)
+        result.i32_value = iv;
+    if (type == TI64)
+        result.i64_value = iv;
     else
         result.bool_value = bv;
     result.type = type;
@@ -494,14 +502,14 @@ ImpValue ImpInterpreter::visit(i32Exp *e)
 {
     ImpValue v;
     v.set_default_value(TI32);
-    v.int_value = e->value;
+    v.i32_value = e->value;
     return v;
 }
 ImpValue ImpInterpreter::visit(i64Exp *e)
 {
     ImpValue v;
     v.set_default_value(TI64);
-    v.int_value = e->value;
+    v.i64_value = e->value;
     return v;
 }
 ImpValue ImpInterpreter::visit(StringExp *e)
