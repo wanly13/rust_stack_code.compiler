@@ -175,19 +175,7 @@ void PrintVisitor::visit(PrintStatement *stm)
         cout << "Error: expresión 1 no válida.";
     }
 
-    cout << ", ";
-
-    // Visitar la segunda expresión
-    if (stm->e2 != nullptr)
-    {
-        stm->e2->accept(this);
-    }
-    else
-    {
-        cout << "Error: expresión 2 no válida.";
-    }
-
-    cout << ");";
+    cout << ", " << stm->e2->accept(this) << ");";
 }
 
 void PrintVisitor::visit(IfStatement *stm)
@@ -199,8 +187,9 @@ void PrintVisitor::visit(IfStatement *stm)
     if (stm->els)
     {
         printIndent();
-        cout << "else" << endl;
+        cout << "} else {" << endl;
         stm->els->accept(this);
+        
     }
     printIndent();
     cout << "}";
@@ -254,16 +243,15 @@ void PrintVisitor::visit(ForStatement *stm)
 
 void PrintVisitor::visit(VarDec *stm)
 {
-    cout << "var ";
+    cout << "let ";
 
     if (stm->isMutable)
     {
         cout << "mut ";
     }
 
-    cout << stm->type << " ";
-
-    cout << stm->name << ";";
+    cout << stm->name << ": ";
+    cout << stm->type << "; ";
 }
 
 void PrintVisitor::visit(VarDecList *stm)
@@ -280,6 +268,13 @@ void PrintVisitor::visit(StatementList *stm)
 {
     for (auto i : stm->stms)
     {
+
+        if (i == nullptr)
+        {
+            // cerr << "Error: elemento nulo en StatementList" << endl;
+            continue; // O maneja el caso según el contexto
+        }
+        // cout << "init " ;
         printIndent();
         i->accept(this);
         cout << endl;
@@ -288,6 +283,7 @@ void PrintVisitor::visit(StatementList *stm)
 
 void PrintVisitor::visit(Body *stm)
 {
+
     increaseIndent();
     stm->vardecs->accept(this);
     stm->slist->accept(this);

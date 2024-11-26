@@ -69,7 +69,7 @@ Parser::Parser(Scanner *sc) : scanner(sc)
 VarDec *Parser::parseVarDec()
 {
     VarDec *vd = NULL;
-    cout << "parseVarDec" << *current << endl;
+    cout << "parseVarDec " << *current << endl;
     if (match(Token::VAR))
     {
         if (!match(Token::MUT))
@@ -137,25 +137,16 @@ StatementList *Parser::parseStatementList()
 
 Body *Parser::parseBody()
 {
-    cout << "parseBody" << endl;
-    if (!match(Token::LBRACE))
-    {
-        cout << "Error: se esperaba '{' al inicio del cuerpo." << endl;
-        exit(1);
-    }
+
     VarDecList *vdl = parseVarDecList();
     StatementList *sl = parseStatementList();
-    /* if (!match(Token::RBRACE))
-    {
-        cout << "Error: se esperaba '}' al final del cuerpo." << endl;
-        exit(1);
-    } */
+
     return new Body(vdl, sl);
 }
 
 FunDec *Parser::parseFunDec()
 {
-    cout << "parseFunDec" << endl;
+    cout << "parseFunDec " << *current << endl;
     FunDec *fd = NULL;
     if (match(Token::FUN))
     {
@@ -224,9 +215,19 @@ FunDec *Parser::parseFunDec()
         }
 
         // Parsear el cuerpo de la función
+        if (!match(Token::LBRACE))
+        {
+            cout << "Error: se esperaba '{' al inicio del cuerpo." << endl;
+            exit(1);
+        }
 
         Body *body = parseBody();
-        cout << "Despues." << *current << endl;
+
+        if (!match(Token::RBRACE))
+        {
+            cout << "Error: se esperaba '}' al final del cuerpo." << endl;
+            exit(1);
+        }
 
         // Crear la declaración de la función
         fd = new FunDec(fname, types, vars, returnType, body);
@@ -346,11 +347,35 @@ Stm *Parser::parseStatement()
 
         e = parseCExp();
 
+        if (!match(Token::LBRACE))
+        {
+            cout << "Error: se esperaba '{' al inicio del cuerpo." << endl;
+            exit(1);
+        }
+
         tb = parseBody();
+
+        if (!match(Token::RBRACE))
+        {
+            cout << "Error: se esperaba '}' al final del cuerpo." << endl;
+            exit(1);
+        }
 
         if (match(Token::ELSE))
         {
+            if (!match(Token::LBRACE))
+            {
+                cout << "Error: se esperaba '{' al inicio del cuerpo." << endl;
+                exit(1);
+            }
+
             fb = parseBody();
+
+            if (!match(Token::RBRACE))
+            {
+                cout << "Error: se esperaba '}' al final del cuerpo." << endl;
+                exit(1);
+            }
         }
         s = new IfStatement(e, tb, fb);
     }
@@ -358,9 +383,17 @@ Stm *Parser::parseStatement()
     {
 
         e = parseCExp();
-
+        if (!match(Token::LBRACE))
+        {
+            cout << "Error: se esperaba '{' al inicio del cuerpo." << endl;
+            exit(1);
+        }
         tb = parseBody();
-
+        if (!match(Token::RBRACE))
+        {
+            cout << "Error: se esperaba '}' al final del cuerpo." << endl;
+            exit(1);
+        }
         s = new WhileStatement(e, tb);
     }
     else if (match(Token::FOR))
@@ -390,9 +423,18 @@ Stm *Parser::parseStatement()
         Exp *end = parseCExp();
 
         Exp *step = nullptr;
-
+        if (!match(Token::LBRACE))
+        {
+            cout << "Error: se esperaba '{' al inicio del cuerpo." << endl;
+            exit(1);
+        }
         Body *tb = parseBody();
 
+        if (!match(Token::RBRACE))
+        {
+            cout << "Error: se esperaba '}' al final del cuerpo." << endl;
+            exit(1);
+        }
         s = new ForStatement(var, start, end, step, tb);
     }
 
@@ -414,15 +456,11 @@ Stm *Parser::parseStatement()
         }
         s = new ReturnStatement(e); // Si es null, no hay problema
     }
-    else if (match(Token::RBRACE))
-    {
 
-        s = new ReturnStatement(e); // Si es null, no hay problema
-    }
     else
     {
-        cout << "Error: Se esperaba un identificador o 'print', pero se encontró: " << *current << endl;
-        exit(1);
+        // cout << "Error: Se esperaba un identificador o 'print', pero se encontró: " << *current << endl;
+        //  exit(1);
     }
     return s;
 }
@@ -431,12 +469,16 @@ Exp *Parser::parseCExp()
 {
     cout << "parseCExp " << *current << endl;
     Exp *left = parseExpression();
-    if (match(Token::LT) || match(Token::LE) || match(Token::EQ))
+    if (match(Token::GT) || match(Token::LT) || match(Token::LE) || match(Token::EQ))
     {
         BinaryOp op;
         if (previous->type == Token::LT)
         {
             op = LT_OP;
+        }
+        if (previous->type == Token::GT)
+        {
+            op = GT_OP;
         }
         else if (previous->type == Token::LE)
         {

@@ -15,7 +15,9 @@ enum BinaryOp
     MUL_OP,
     DIV_OP,
     LT_OP,
+    GT_OP,
     LE_OP,
+    GE_OP,
     EQ_OP
 };
 

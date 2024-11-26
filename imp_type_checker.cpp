@@ -132,6 +132,7 @@ void ImpTypeChecker::visit(VarDec *vd)
 void ImpTypeChecker::add_fundec(FunDec *fd)
 {
   ImpType funtype;
+  
   if (!funtype.set_fun_type(fd->types, fd->rtype))
   {
     cout << "Tipo invalido en declaracion de funcion: " << fd->fname << endl;

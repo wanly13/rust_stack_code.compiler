@@ -163,8 +163,15 @@ string Exp::binopToChar(BinaryOp op)
     case LT_OP:
         c = "<";
         break;
+    case GT_OP:
+        c = ">";
+        break;
+    
     case LE_OP:
         c = "<=";
+        break;
+    case GE_OP:
+        c = ">=";
         break;
     case EQ_OP:
         c = "==";
