@@ -11,6 +11,7 @@ using namespace std;
 enum BinaryOp
 {
     PLUS_OP,
+    PLUS_ASSIGN_OP,
     MINUS_OP,
     MUL_OP,
     DIV_OP,
@@ -107,7 +108,6 @@ public:
     ImpType accept(TypeVisitor *v);
     ~i64Exp();
 };
-
 
 class IdentifierExp : public Exp
 {

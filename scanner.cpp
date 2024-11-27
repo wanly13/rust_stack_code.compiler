@@ -69,7 +69,7 @@ Token *Scanner::nextToken()
         {
             token = new Token(Token::FOR, word, 0, word.length());
         }
-        else if (word == "IN")
+        else if (word == "in")
         {
             token = new Token(Token::IN, word, 0, word.length());
         }

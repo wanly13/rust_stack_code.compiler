@@ -10,6 +10,7 @@ using namespace std;
 // Inicio del Programa
 Program *Parser::parseProgram()
 {
+    cout << "INIT: " << *current << endl;
     VarDecList *v = parseVarDecList(); // Declaraciones de variables
     FunDecList *b = parseFunDecList(); // Declaraciones de funciones
     return new Program(v, b);
@@ -112,6 +113,7 @@ VarDec *Parser::parseVarDec()
 
 VarDecList *Parser::parseVarDecList()
 {
+
     VarDecList *vdl = new VarDecList();
     VarDec *aux;
     aux = parseVarDec();
@@ -268,7 +270,7 @@ Stm *Parser::parseStatement()
     Exp *e = NULL;
     Body *tb = NULL; // true case
     Body *fb = NULL; // false case
-    cout << "ACTUAL: " << *current << endl;
+
     if (current == NULL)
     {
         cout << "Error: Token actual es NULL" << endl;
@@ -285,28 +287,20 @@ Stm *Parser::parseStatement()
             e = parseCExp();
             s = new AssignStatement(lex, e);
         }
-        else
+        else if (match(Token::PLUS_ASSIGN))
         {
-            if (match(Token::PI)) // Caso especial para el for
+            cout << "plus";
+            e = parseCExp();
+
+            if (!match(Token::ID))
             {
-                list<Exp *> args;
-                if (!check(Token::PD))
-                {
-                    args.push_back(parseCExp());
-                    while (match(Token::COMA))
-                    {
-                        args.push_back(parseCExp());
-                    }
-                }
-                if (!match(Token::PD))
-                {
-                    cout << "Falta paréntesis derecho" << endl;
-                    exit(0);
-                }
-                s = new FCallStatement(lex, args);
+                cout << "Error: se esperaba 'id'" << endl;
+                exit(1);
             }
+            s = new AssignStatement(lex, e);
         }
     }
+
     else if (match(Token::PRINT))
     {
         if (!match(Token::PI)) // Verifica que haya un '('
@@ -399,44 +393,51 @@ Stm *Parser::parseStatement()
     }
     else if (match(Token::FOR))
     {
-
+        cout << "FOR ::ID : " << *current << endl;
         if (!match(Token::ID))
         {
             cout << "Error: se esperaba un identificador después de 'for'." << endl;
             exit(1);
         }
+
         string var = previous->text;
 
+        cout << " ::IN : " << *current << endl;
         if (!match(Token::IN))
         {
             cout << "Error: se esperaba 'in' después del identificador." << endl;
             exit(1);
         }
-
+        cout << " ::START : " << *current << endl;
         Exp *start = parseCExp();
 
+        cout << " ::RANGE : " << *current << endl;
         if (!match(Token::RANGE))
         {
             cout << "Error: se esperaba '..' después de la expresión inicial." << endl;
             exit(1);
         }
 
+        cout << " ::START : " << *current << endl;
         Exp *end = parseCExp();
 
-        Exp *step = nullptr;
+        cout << " ::LBRACE : " << *current << endl;
         if (!match(Token::LBRACE))
         {
             cout << "Error: se esperaba '{' al inicio del cuerpo." << endl;
             exit(1);
         }
+
+        cout << " ::BODYSTART : " << *current << endl;
         Body *tb = parseBody();
 
+        cout << " ::RBRACE : " << *current << endl;
         if (!match(Token::RBRACE))
         {
             cout << "Error: se esperaba '}' al final del cuerpo." << endl;
             exit(1);
         }
-        s = new ForStatement(var, start, end, step, tb);
+        s = new ForStatement(var, start, end, nullptr, tb);
     }
 
     else if (match(Token::RETURN))
@@ -468,7 +469,7 @@ Stm *Parser::parseStatement()
 
 Exp *Parser::parseCExp()
 {
-    cout << "parseCExp " << *current << endl;
+    cout << "parseCExp " << endl;
     Exp *left = parseExpression();
     if (match(Token::GT) || match(Token::LT) || match(Token::LE) || match(Token::EQ))
     {
@@ -497,7 +498,7 @@ Exp *Parser::parseCExp()
 
 Exp *Parser::parseExpression()
 {
-
+    cout << "parseExpression " << endl;
     Exp *left = parseTerm();
     while (match(Token::PLUS) || match(Token::MINUS))
     {
@@ -510,6 +511,10 @@ Exp *Parser::parseExpression()
         {
             op = MINUS_OP;
         }
+        else if (previous->type == Token::PLUS_ASSIGN)
+        {
+            op = PLUS_ASSIGN_OP;
+        }
         Exp *right = parseTerm();
         left = new BinaryExp(left, right, op);
     }
@@ -518,7 +523,7 @@ Exp *Parser::parseExpression()
 
 Exp *Parser::parseTerm()
 {
-
+    cout << "parseTerm " << endl;
     Exp *left = parseFactor();
     while (match(Token::MUL) || match(Token::DIV))
     {
@@ -539,7 +544,7 @@ Exp *Parser::parseTerm()
 
 Exp *Parser::parseFactor()
 {
-    cout << "parseFactor " << *current << endl;
+    cout << "parseFactor " << endl;
     Exp *e;
     Exp *e1;
     Exp *e2;
@@ -553,20 +558,11 @@ Exp *Parser::parseFactor()
 
         return new BoolExp(0);
     }
+
     else if (match(Token::NUM))
     {
 
-        long long numero = std::stoll(previous->text); // Convierte el texto a long long
-
-        // Verifica si el número cabe en un i32
-        if (numero <= std::numeric_limits<int>::max() && numero >= std::numeric_limits<int>::min())
-        {
-            return new i32Exp(static_cast<int>(numero)); // Crea un i32Exp
-        }
-        else
-        {
-            return new i64Exp(numero); // Crea un i64Exp
-        }
+        return new i32Exp(stoi(previous->text));
     }
 
     else if (match(Token::STRING))

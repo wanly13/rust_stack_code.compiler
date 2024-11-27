@@ -158,6 +158,9 @@ string Exp::binopToChar(BinaryOp op)
     case PLUS_OP:
         c = "+";
         break;
+    case PLUS_ASSIGN_OP:
+        c = "+=";
+        break;
     case MINUS_OP:
         c = "-";
         break;

@@ -455,6 +455,10 @@ ImpValue ImpInterpreter::visit(BinaryExp *e)
         iv = iv1 + iv2;
         type = TI32;
         break;
+    case PLUS_ASSIGN_OP:
+        iv += iv2;
+        type = TI32;
+        break;
     case MINUS_OP:
         iv = iv1 - iv2;
         type = TI32;
