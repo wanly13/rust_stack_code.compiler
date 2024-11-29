@@ -187,7 +187,16 @@ void ImpCodeGen::visit(AssignStatement *s)
     codegen(nolabel, "storer", ventry.dir);
   return;
 }
-
+void ImpCodeGen::visit(PlusAssignStatement *s)
+{
+  s->rhs->accept(this);
+  VarEntry ventry = direcciones.lookup(s->id);
+  if (ventry.is_global)
+    codegen(nolabel, "store", ventry.dir);
+  else
+    codegen(nolabel, "storer", ventry.dir);
+  return;
+}
 void ImpCodeGen::visit(PrintStatement *s)
 {
   s->e1->accept(this);

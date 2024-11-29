@@ -6,7 +6,7 @@ pusha Lmain
 call
 halt
 Lmain: skip
-enter 4
+enter 3
 alloc 1
 alloc 1
 store 1
@@ -21,9 +21,7 @@ jmpz L1
 push  ""{}""
 loadr 1
 print
-loadr 1
 push  1
-add
 storer 1
 goto L0
 L1: skip

@@ -111,7 +111,10 @@ void AssignStatement::accept(TypeVisitor *v)
 {
     return v->visit(this);
 }
-
+void PlusAssignStatement::accept(TypeVisitor *v)
+{
+    return v->visit(this);
+}
 void PrintStatement::accept(TypeVisitor *v)
 {
     return v->visit(this);
@@ -156,7 +159,10 @@ void AssignStatement::accept(ImpValueVisitor *v)
 {
     return v->visit(this);
 }
-
+void PlusAssignStatement::accept(ImpValueVisitor *v)
+{
+    return v->visit(this);
+}
 void PrintStatement::accept(ImpValueVisitor *v)
 {
     return v->visit(this);
@@ -343,6 +349,52 @@ void ImpInterpreter::visit(AssignStatement *s)
     env.update(s->id, v);
     return;
 }
+void ImpInterpreter::visit(PlusAssignStatement *s)
+{
+    
+    ImpValue rhs_value = s->rhs->accept(this);
+
+    
+    if (!env.check(s->id))
+    {
+        cout << "Error: Variable '" << s->id << "' no definida." << endl;
+        exit(1);
+    }
+
+    
+    ImpValue lhs_value = env.lookup(s->id);
+
+    
+    if (lhs_value.type != rhs_value.type)
+    {
+        cout << "Error de tipo en '+=': Los tipos no coinciden para la variable '" << s->id << "'." << endl;
+        exit(1);
+    }
+
+    
+    ImpValue result;
+    if (lhs_value.type == TI32)
+    {
+        result.type = TI32;
+        result.i32_value = lhs_value.i32_value + rhs_value.i32_value;
+    }
+    else if (lhs_value.type == TI64)
+    {
+        result.type =TI64;
+        result.i64_value = lhs_value.i64_value + rhs_value.i64_value;
+    }
+    else
+    {
+        cout << "Error: Operación '+=` no soportada para el tipo '" << lhs_value.type << "'." << endl;
+        exit(1);
+    }
+
+    
+    env.update(s->id, result);
+
+    return;
+}
+
 
 void ImpInterpreter::visit(PrintStatement *s)
 {

@@ -165,6 +165,18 @@ public:
     ~AssignStatement();
 };
 
+class PlusAssignStatement : public Stm
+{
+public:
+    std::string id;
+    Exp *rhs;
+    PlusAssignStatement(std::string id, Exp *e);
+    int accept(Visitor *visitor);
+    void accept(ImpValueVisitor *v);
+    void accept(TypeVisitor *v);
+    ~PlusAssignStatement();
+};
+
 class PrintStatement : public Stm
 {
 public:

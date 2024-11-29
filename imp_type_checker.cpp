@@ -228,7 +228,25 @@ void ImpTypeChecker::visit(AssignStatement *s)
   }
   return;
 }
+void ImpTypeChecker::visit(PlusAssignStatement *s)
+{
+  cout << "$PlusAssignStatement" << endl;
+  ImpType type = s->rhs->accept(this);
+  if (!env.check(s->id))
+  {
+    cout << "Variable " << s->id << " undefined" << endl;
+    exit(0);
+  }
+  sp_decr(1);
 
+  ImpType var_type = env.lookup(s->id); // Me ha traido la posicion
+
+  if (!type.match(var_type))
+  {
+    cout << "Tipo incorrecto en Assign a " << s->id << " : " << var_type.ttype << endl;
+  }
+  return;
+}
 void ImpTypeChecker::visit(PrintStatement *s)
 {
   cout << "$PrintStatement" << endl;

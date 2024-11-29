@@ -52,6 +52,15 @@ AssignStatement::~AssignStatement()
 {
     delete rhs;
 }
+
+
+PlusAssignStatement::PlusAssignStatement(string id, Exp *e) : id(id), rhs(e) {}
+PlusAssignStatement::~PlusAssignStatement()
+{
+    delete rhs;
+}
+
+
 PrintStatement::PrintStatement(Exp *e1, Exp *e2) : e1(e1), e2(e2) {}
 PrintStatement::~PrintStatement()
 {

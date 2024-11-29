@@ -272,7 +272,7 @@ list<Stm *> Parser::parseStmList()
 
 Stm *Parser::parseStatement()
 {
-    cout << "$parseStatement " << *current << endl;
+    cout << "$parseStatement " << endl;
     Stm *s = NULL;
     Exp *e = NULL;
     Body *tb = NULL; // true case
@@ -299,13 +299,9 @@ Stm *Parser::parseStatement()
 
             e = parseCExp();
 
-            if (!match(Token::NUM))
-            {
-                cout << "Error: se esperaba 'num'" << endl;
-                exit(1);
-            }
-            s = new AssignStatement(lex, e);
+            s = new PlusAssignStatement(lex, e);
         }
+        
     }
 
     else if (match(Token::PRINT))

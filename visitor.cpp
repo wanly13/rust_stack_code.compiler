@@ -45,7 +45,11 @@ int AssignStatement::accept(Visitor *visitor)
     visitor->visit(this);
     return 0;
 }
-
+int PlusAssignStatement::accept(Visitor *visitor)
+{
+    visitor->visit(this);
+    return 0;
+}
 int FCallStatement::accept(Visitor *visitor)
 {
     visitor->visit(this);
@@ -179,7 +183,12 @@ void PrintVisitor::visit(AssignStatement *stm)
     stm->rhs->accept(this);
     cout << ";";
 }
-
+void PrintVisitor::visit(PlusAssignStatement *stm)
+{
+    cout << stm->id << " += ";
+    stm->rhs->accept(this);
+    cout << ";";
+}
 void PrintVisitor::visit(PrintStatement *stm)
 {
     cout << "println!(";

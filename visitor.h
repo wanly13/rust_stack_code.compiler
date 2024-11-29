@@ -12,6 +12,7 @@ class i64Exp;
 class IFExp;
 class IdentifierExp;
 class AssignStatement;
+class PlusAssignStatement;
 class PrintStatement;
 class IfStatement;
 class WhileStatement;
@@ -39,6 +40,7 @@ public:
     virtual int visit(IdentifierExp* exp) = 0;
     virtual int visit(FCallExp* exp) = 0;
     virtual void visit(AssignStatement* stm) = 0;
+    virtual void visit(PlusAssignStatement* stm) = 0;
     virtual void visit(PrintStatement* stm) = 0;
     virtual void visit(IfStatement* stm) = 0;
     virtual void visit(WhileStatement* stm) = 0;
@@ -67,6 +69,7 @@ public:
     int visit(IdentifierExp* exp) override;
     int visit(FCallExp* exp) override;
     void visit(AssignStatement* stm) override;
+    void visit(PlusAssignStatement* stm) override;
     void visit(PrintStatement* stm) override;
     void visit(IfStatement* stm) override;
     void visit(WhileStatement* stm) override;
