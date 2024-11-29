@@ -1,15 +1,11 @@
 fn main() {
-    // Comentario
     let mut x: i32;
     let mut y: i32;
     let mut z: i32;
-    // No deberia afectar en nada
+
     x = 1;
-    // No deberia afectar en nada
     y = 10;
-    // No deberia afectar en nada
     z = 1000000;
-    // No deberia afectar en nada
     x = 20;
 
     println!("{}", x);

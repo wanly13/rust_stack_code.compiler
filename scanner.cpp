@@ -100,17 +100,37 @@ Token *Scanner::nextToken()
     // Comentarios
     else if (c == '/')
     {
+        // ------------  (//)
         if (current + 1 < input.length() && input[current + 1] == '/')
         {
-            // Comentario de línea
+            
             current += 2;
             while (current < input.length() && input[current] != '\n')
                 current++;
-            cout << "COMMENT" << endl;
+            cout << "LINE COMMENT" << endl;
             return nextToken();
+        }
+        else if (current + 1 < input.length() && input[current + 1] == '*')
+        {
+            // ------------ (/* ... */)
+            current += 2; 
+            while (current < input.length())
+            {
+               
+                if (current + 1 < input.length() && input[current] == '*' && input[current + 1] == '/')
+                {
+                    current += 2; 
+                    cout << "BLOCK COMMENT" << endl;
+                    return nextToken();
+                }
+                current++;
+            }
+            cout << "Error: comentario de bloque no cerrado" << endl;
+            exit(1); 
         }
         else
         {
+            // Caso normal para el operador '/'
             current++;
             token = new Token(Token::DIV, c);
         }
