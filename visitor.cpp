@@ -249,7 +249,7 @@ void PrintVisitor::visit(WhileStatement *stm)
 void PrintVisitor::visit(ForStatement *stm)
 {
     cout << "for ";
-    cout << stm->var ;
+    cout << stm->var;
     cout << " in ";
     stm->start->accept(this);
     cout << "..";
@@ -352,10 +352,10 @@ void PrintVisitor::visit(FunDecList *stm)
 
 void PrintVisitor::visit(ReturnStatement *s)
 {
-    // cout << "return (";
+    cout << "return (";
     if (s->e != NULL)
         s->e->accept(this);
-    // cout << ")";
+    cout << ")";
     return;
 }
 

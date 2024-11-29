@@ -74,6 +74,7 @@ Parser::Parser(Scanner *sc) : scanner(sc)
 
 VarDec *Parser::parseVarDec()
 {
+    cout << "$parseVarDec" << endl;
     VarDec *vd = NULL;
 
     if (match(Token::VAR))
@@ -144,7 +145,7 @@ StatementList *Parser::parseStatementList()
 
 Body *Parser::parseBody()
 {
-
+    cout << "$parseBody" << endl;
     VarDecList *vdl = parseVarDecList();
 
     StatementList *sl = parseStatementList();
@@ -154,7 +155,7 @@ Body *Parser::parseBody()
 
 FunDec *Parser::parseFunDec()
 {
-    cout << "parseFunDec" << endl;
+    cout << "$parseFunDec" << endl;
     FunDec *fd = NULL;
     if (match(Token::FUN))
     {
@@ -233,7 +234,7 @@ FunDec *Parser::parseFunDec()
         cout << "*current" << *current << endl;
         if (!match(Token::RBRACE))
         {
-            cout << "Error: se esperaba '}' al final del cuerpo.1" << endl;
+            cout << "Error: se esperaba '}' al final del cuerpo." << endl;
             exit(1);
         }
 
@@ -271,7 +272,7 @@ list<Stm *> Parser::parseStmList()
 
 Stm *Parser::parseStatement()
 {
-    cout << "parseStatement " << *current << endl;
+    cout << "$parseStatement " << *current << endl;
     Stm *s = NULL;
     Exp *e = NULL;
     Body *tb = NULL; // true case
@@ -444,20 +445,9 @@ Stm *Parser::parseStatement()
     else if (match(Token::RETURN))
     {
         cout << " $RETURN" << endl;
-        if (!match(Token::PI))
-        {
-            cout << "Error: se esperaba '(' después de 'return'." << endl;
-            exit(1);
-        }
-        if (!check(Token::PD))
-        {
-            e = parseCExp();
-        }
-        if (!match(Token::PD))
-        {
-            cout << "Error: se esperaba ')' después de la expresión." << endl;
-            exit(1);
-        }
+
+        e = parseCExp();
+
         s = new ReturnStatement(e); // Si es null, no hay problema
     }
 
@@ -473,7 +463,7 @@ Stm *Parser::parseStatement()
 
 Exp *Parser::parseCExp()
 {
-    cout << "parseCExp " << endl;
+    cout << "$parseCExp" << endl;
     Exp *left = parseExpression();
     if (match(Token::GT) || match(Token::LT) || match(Token::LE) || match(Token::EQ))
     {
@@ -502,7 +492,8 @@ Exp *Parser::parseCExp()
 
 Exp *Parser::parseExpression()
 {
-    cout << "parseExpression " << endl;
+    cout << "$parseExpression" << endl;
+
     Exp *left = parseTerm();
     while (match(Token::PLUS) || match(Token::MINUS))
     {
@@ -527,7 +518,7 @@ Exp *Parser::parseExpression()
 
 Exp *Parser::parseTerm()
 {
-    cout << "parseTerm " << endl;
+    cout << "$parseTerm " << endl;
     Exp *left = parseFactor();
     while (match(Token::MUL) || match(Token::DIV))
     {
@@ -548,7 +539,7 @@ Exp *Parser::parseTerm()
 
 Exp *Parser::parseFactor()
 {
-    cout << "parseFactor " << *current << endl;
+    cout << "$parseFactor " << *current << endl;
     Exp *e;
     Exp *e1;
     Exp *e2;

@@ -191,7 +191,7 @@ void ImpTypeChecker::visit(FunDec *fd)
     env.add_var(*it, ptype);
   }
 
-  // env.add_var("return", rtype);
+  env.add_var("return", rtype);
   fd->body->accept(this);
   env.remove_level();
   return;
