@@ -77,7 +77,7 @@ ForStatement::~ForStatement()
 {
     delete start;
     delete end;
-    // delete step;
+    delete step;
     delete b;
 }
 

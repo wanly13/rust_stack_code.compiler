@@ -88,7 +88,7 @@ bool ImpType::set_fun_type(list<string> slist, string s)
 
 ImpType::TType ImpType::string_to_type(string s)
 {
-  cout << "S" << s << endl;
+  cout << "$string_to_type " << s << endl;
   TType tt;
   if (s.compare("int") == 0)
     tt = ImpType::INT;

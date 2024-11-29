@@ -251,13 +251,12 @@ void PrintVisitor::visit(ForStatement *stm)
     cout << "for ";
     cout << stm->var ;
     cout << " in ";
-    cout << "(";
     stm->start->accept(this);
     cout << "..";
     stm->end->accept(this);
-    cout << ")";
     cout << " {" << endl;
     stm->b->accept(this);
+    printIndent();
     cout << "}" << endl;
 }
 

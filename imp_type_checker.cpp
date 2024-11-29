@@ -66,7 +66,7 @@ void ImpTypeChecker::visit(Program *p)
 
 void ImpTypeChecker::visit(Body *b)
 {
-  cout << "body" << endl;
+  cout << "$Body" << endl;
   int start_dir = dir; // added
   env.add_level();
 
@@ -132,6 +132,7 @@ void ImpTypeChecker::visit(FunDecList *s)
 
 void ImpTypeChecker::visit(VarDec *vd)
 {
+  cout << "$VarDec" << endl;
   ImpType type;
   type.set_basic_type(vd->type);
 
@@ -140,8 +141,8 @@ void ImpTypeChecker::visit(VarDec *vd)
     cout << "Tipo invalido: " << vd->type << endl;
     exit(0);
   }
-  env.add_var(vd->name, type);
   cout << "save: " << vd->name << " type: " << type << endl;
+  env.add_var(vd->name, type);
   dir++;
   if (dir > max_dir)
     max_dir = dir;
@@ -151,8 +152,9 @@ void ImpTypeChecker::visit(VarDec *vd)
 
 void ImpTypeChecker::add_fundec(FunDec *fd)
 {
+  cout << "$add_fundec" << endl;
   ImpType funtype;
-  cout << "FunDec" << endl;
+
   if (!funtype.set_fun_type(fd->types, fd->rtype))
   {
     cout << "Tipo invalido en declaracion de funcion: " << fd->fname << endl;
@@ -169,13 +171,13 @@ void ImpTypeChecker::add_fundec(FunDec *fd)
   }
 
   env.add_var(fd->fname, funtype);
-  ;
+
   return;
 }
 
 void ImpTypeChecker::visit(FunDec *fd)
 {
-  cout << "FunDec" << endl;
+  cout << "$FunDec" << endl;
   env.add_level();
   ImpType funtype = env.lookup(fd->fname);
   ImpType rtype, ptype;
@@ -217,6 +219,7 @@ void ImpTypeChecker::visit(AssignStatement *s)
     exit(0);
   }
   sp_decr(1);
+
   ImpType var_type = env.lookup(s->id); // Me ha traido la posicion
 
   if (!type.match(var_type))
@@ -266,7 +269,7 @@ void ImpTypeChecker::visit(WhileStatement *s)
 
 void ImpTypeChecker::visit(ReturnStatement *s)
 {
-  cout << "ReturnStatement" << endl;
+  cout << "$ReturnStatement" << endl;
   ImpType rtype = env.lookup("return");
   ImpType etype;
   if (s->e != NULL)
@@ -292,12 +295,15 @@ void ImpTypeChecker::visit(ForStatement *s)
     cout << "Expresiones en for deben de ser i32type" << endl;
     exit(0);
   }
-  cout << "$ForStatementEND1" << endl;
-  sp_decr(3);
-  cout << "$ForStatementEND2" << endl;
+  env.add_level();
+  ImpType iteratorType;
+  iteratorType.set_basic_type("i32");
+  env.add_var(s->var, iteratorType);
+  cout << "save: " << s->var << " type: " << endl;
 
   s->b->accept(this);
-  cout << "$ForStatementEND" << endl;
+  env.remove_level();
+  sp_decr(3);
   return;
 }
 
@@ -318,7 +324,7 @@ ImpType ImpTypeChecker::visit(BinaryExp *e)
   case MINUS_OP:
   case MUL_OP:
   case DIV_OP:
-    result = inttype;
+    result = i32type;
     break;
   case LT_OP:
   case LE_OP:
@@ -362,7 +368,9 @@ ImpType ImpTypeChecker::visit(IdentifierExp *e)
 {
   sp_incr(1);
   if (env.check(e->name))
+  {
     return env.lookup(e->name);
+  }
   else
   {
     cout << "Variable indefinida:2 " << e->name << endl;

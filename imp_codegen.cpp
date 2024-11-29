@@ -274,7 +274,8 @@ void ImpCodeGen::visit(ForStatement *s)
 
   // Incrementar el contador
   codegen(nolabel, "loadr", current_dir);
-  s->step->accept(this);
+  cout << "code" << endl;
+  //s->step->accept(this);
   codegen(nolabel, "add");
   codegen(nolabel, "storer", current_dir);
 
