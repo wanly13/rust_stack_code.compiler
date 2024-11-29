@@ -393,43 +393,25 @@ void ImpInterpreter::visit(ReturnStatement *s)
     return;
 }
 
-void ImpInterpreter::visit(ForStatement *fs)
+void ImpInterpreter::visit(ForStatement *s)
 {
     env.add_level();
-    ImpValue start = fs->start->accept(this);
-    ImpValue end = fs->end->accept(this);
-
-    ImpValue step;
-    if (fs->step != nullptr)
+    ImpValue start = s->start->accept(this);
+    ImpValue end = s->end->accept(this);
+    //ImpValue paso = s->step->accept(this);
+    if (start.type != TI32 || end.type != TI32 ) //|| paso.type != TI32
     {
-        step = fs->step->accept(this);
-    }
-    else
-    {
-        step.type = TINT;
-        step.int_value = 1;
-    }
-
-    string varName = fs->var;
-    env.add_var(varName, start);
-
-    if (start.type != TINT || end.type != TINT || step.type != TINT)
-    {
-        cout << "Error de tipos: se esperan enteros para start, end y step." << endl;
+        cout << "Error de tipos:  tienen que ser enteros" << endl;
         exit(0);
     }
-    while (start.int_value < end.int_value)
+    int a = start.int_value;
+    while (a < end.int_value)
     {
-        fs->b->accept(this);
-
-        ImpValue currentValue = env.lookup(varName);
-        currentValue.int_value = currentValue.int_value + step.int_value;
-        env.add_var(varName, currentValue);
+        s->b->accept(this);
+        a += 1;
     }
-    env.remove_level();
     return;
 }
-
 ImpValue ImpInterpreter::visit(BinaryExp *e)
 {
 
@@ -547,7 +529,7 @@ ImpValue ImpInterpreter::visit(IdentifierExp *e)
         return env.lookup(e->name);
     else
     {
-        cout << "Variable indefinida: " << e->name << endl;
+        cout << "Variable indefinida:1 " << e->name << endl;
         exit(0);
     }
 }

@@ -66,13 +66,14 @@ Token *Scanner::nextToken()
             token = new Token(Token::RETURN, word, 0, word.length());
         // Bucles
         else if (word == "for")
-        {
             token = new Token(Token::FOR, word, 0, word.length());
-        }
+
         else if (word == "in")
-        {
             token = new Token(Token::IN, word, 0, word.length());
-        }
+
+        else if (word == "while")
+            token = new Token(Token::WHILE, word, 0, word.length());
+
         // Main
         else if (word == "main")
             token = new Token(Token::ID, word, 0, word.length()); // Puede tener un tipo específico
@@ -132,10 +133,10 @@ Token *Scanner::nextToken()
             }
             break;
         case '-':
-            if (current + 1 < input.length() && input[current + 1] == '>') 
+            if (current + 1 < input.length() && input[current + 1] == '>')
             {
-                token = new Token(Token::ARROW, "->", 0, 2); 
-                current++;                                   
+                token = new Token(Token::ARROW, "->", 0, 2);
+                current++;
             }
             else
             {

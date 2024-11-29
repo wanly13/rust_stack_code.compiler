@@ -1,9 +1,10 @@
 fn main() {
-    let mut contador : i32;
+    let mut x : i32;
     x = 1;
 
-    while contador <= 5 {
-        println!("El contador es: {}", contador);
-        contador += 1;
+    while x <= 5 {
+        println!("{}", x);
+        x = x + 1;
     }
+    
 }

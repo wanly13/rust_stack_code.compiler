@@ -10,9 +10,13 @@ using namespace std;
 // Inicio del Programa
 Program *Parser::parseProgram()
 {
-    cout << "INIT: " << *current << endl;
+    cout << "DECL - INIT: " << *current << endl;
     VarDecList *v = parseVarDecList(); // Declaraciones de variables
+    cout << "DECL - SUCCES: " << endl;
+
+    cout << "FUNCT - INIT: " << *current << endl;
     FunDecList *b = parseFunDecList(); // Declaraciones de funciones
+    cout << "FUNCT SUCCES: " << endl;
     return new Program(v, b);
 }
 
@@ -71,7 +75,7 @@ Parser::Parser(Scanner *sc) : scanner(sc)
 VarDec *Parser::parseVarDec()
 {
     VarDec *vd = NULL;
-    cout << "parseVarDec " << *current << endl;
+
     if (match(Token::VAR))
     {
         if (!match(Token::MUT))
@@ -142,6 +146,7 @@ Body *Parser::parseBody()
 {
 
     VarDecList *vdl = parseVarDecList();
+
     StatementList *sl = parseStatementList();
 
     return new Body(vdl, sl);
@@ -149,7 +154,7 @@ Body *Parser::parseBody()
 
 FunDec *Parser::parseFunDec()
 {
-    cout << "parseFunDec " << *current << endl;
+    cout << "parseFunDec" << endl;
     FunDec *fd = NULL;
     if (match(Token::FUN))
     {
@@ -225,10 +230,10 @@ FunDec *Parser::parseFunDec()
         }
 
         Body *body = parseBody();
-
+        cout << "*current" << *current << endl;
         if (!match(Token::RBRACE))
         {
-            cout << "Error: se esperaba '}' al final del cuerpo." << endl;
+            cout << "Error: se esperaba '}' al final del cuerpo.1" << endl;
             exit(1);
         }
 
@@ -254,6 +259,7 @@ FunDecList *Parser::parseFunDecList()
 
 list<Stm *> Parser::parseStmList()
 {
+
     list<Stm *> slist;
     slist.push_back(parseStatement());
     while (match(Token::PC))
@@ -265,7 +271,7 @@ list<Stm *> Parser::parseStmList()
 
 Stm *Parser::parseStatement()
 {
-    cout << "parseStatement" << endl;
+    cout << "parseStatement " << *current << endl;
     Stm *s = NULL;
     Exp *e = NULL;
     Body *tb = NULL; // true case
@@ -279,7 +285,7 @@ Stm *Parser::parseStatement()
 
     if (match(Token::ID))
     {
-
+        cout << " $ID" << endl;
         string lex = previous->text;
 
         if (match(Token::ASSIGN))
@@ -289,12 +295,12 @@ Stm *Parser::parseStatement()
         }
         else if (match(Token::PLUS_ASSIGN))
         {
-            cout << "plus";
+
             e = parseCExp();
 
-            if (!match(Token::ID))
+            if (!match(Token::NUM))
             {
-                cout << "Error: se esperaba 'id'" << endl;
+                cout << "Error: se esperaba 'num'" << endl;
                 exit(1);
             }
             s = new AssignStatement(lex, e);
@@ -303,6 +309,7 @@ Stm *Parser::parseStatement()
 
     else if (match(Token::PRINT))
     {
+        cout << " $PRINT" << endl;
         if (!match(Token::PI)) // Verifica que haya un '('
         {
             cout << "Error: se esperaba un '(' después de 'print'." << endl;
@@ -339,7 +346,7 @@ Stm *Parser::parseStatement()
     }
     else if (match(Token::IF))
     {
-
+        cout << " $IF" << endl;
         e = parseCExp();
 
         if (!match(Token::LBRACE))
@@ -352,7 +359,7 @@ Stm *Parser::parseStatement()
 
         if (!match(Token::RBRACE))
         {
-            cout << "Error: se esperaba '}' al final del cuerpo." << endl;
+            cout << "Error: se esperaba '}' al final del cuerpo.2" << endl;
             exit(1);
         }
 
@@ -368,7 +375,7 @@ Stm *Parser::parseStatement()
 
             if (!match(Token::RBRACE))
             {
-                cout << "Error: se esperaba '}' al final del cuerpo." << endl;
+                cout << "Error: se esperaba '}' al final del cuerpo.3" << endl;
                 exit(1);
             }
         }
@@ -376,7 +383,7 @@ Stm *Parser::parseStatement()
     }
     else if (match(Token::WHILE))
     {
-
+        cout << " $WHILE" << endl;
         e = parseCExp();
         if (!match(Token::LBRACE))
         {
@@ -386,14 +393,14 @@ Stm *Parser::parseStatement()
         tb = parseBody();
         if (!match(Token::RBRACE))
         {
-            cout << "Error: se esperaba '}' al final del cuerpo." << endl;
+            cout << "Error: se esperaba '}' al final del cuerpo.4" << endl;
             exit(1);
         }
         s = new WhileStatement(e, tb);
     }
     else if (match(Token::FOR))
     {
-        cout << "FOR ::ID : " << *current << endl;
+        cout << " $FOR" << endl;
         if (!match(Token::ID))
         {
             cout << "Error: se esperaba un identificador después de 'for'." << endl;
@@ -402,46 +409,41 @@ Stm *Parser::parseStatement()
 
         string var = previous->text;
 
-        cout << " ::IN : " << *current << endl;
         if (!match(Token::IN))
         {
             cout << "Error: se esperaba 'in' después del identificador." << endl;
             exit(1);
         }
-        cout << " ::START : " << *current << endl;
+
         Exp *start = parseCExp();
 
-        cout << " ::RANGE : " << *current << endl;
         if (!match(Token::RANGE))
         {
             cout << "Error: se esperaba '..' después de la expresión inicial." << endl;
             exit(1);
         }
-
-        cout << " ::START : " << *current << endl;
         Exp *end = parseCExp();
 
-        cout << " ::LBRACE : " << *current << endl;
         if (!match(Token::LBRACE))
         {
             cout << "Error: se esperaba '{' al inicio del cuerpo." << endl;
             exit(1);
         }
 
-        cout << " ::BODYSTART : " << *current << endl;
         Body *tb = parseBody();
 
-        cout << " ::RBRACE : " << *current << endl;
         if (!match(Token::RBRACE))
         {
-            cout << "Error: se esperaba '}' al final del cuerpo." << endl;
+            cout << "Error: se esperaba '}' al final del cuerpo.5" << endl;
             exit(1);
         }
         s = new ForStatement(var, start, end, nullptr, tb);
+        cout << " $FOR-END" << endl;
     }
 
     else if (match(Token::RETURN))
     {
+        cout << " $RETURN" << endl;
         if (!match(Token::PI))
         {
             cout << "Error: se esperaba '(' después de 'return'." << endl;
@@ -461,9 +463,11 @@ Stm *Parser::parseStatement()
 
     else
     {
+
         // cout << "Error: Se esperaba un identificador o 'print', pero se encontró: " << *current << endl;
         //  exit(1);
     }
+
     return s;
 }
 
@@ -544,7 +548,7 @@ Exp *Parser::parseTerm()
 
 Exp *Parser::parseFactor()
 {
-    cout << "parseFactor " << endl;
+    cout << "parseFactor " << *current << endl;
     Exp *e;
     Exp *e1;
     Exp *e2;

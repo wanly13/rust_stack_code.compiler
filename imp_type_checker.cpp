@@ -93,7 +93,7 @@ void ImpTypeChecker::visit(VarDecList *decs)
 
 void ImpTypeChecker::visit(FunDecList *s)
 {
-  cout << "FunDecList" << endl;
+
   list<FunDec *>::iterator it;
   for (it = s->flist.begin(); it != s->flist.end(); ++it)
   {
@@ -152,7 +152,7 @@ void ImpTypeChecker::visit(VarDec *vd)
 void ImpTypeChecker::add_fundec(FunDec *fd)
 {
   ImpType funtype;
-  cout << "add_fundec f" << endl;
+  cout << "FunDec" << endl;
   if (!funtype.set_fun_type(fd->types, fd->rtype))
   {
     cout << "Tipo invalido en declaracion de funcion: " << fd->fname << endl;
@@ -167,7 +167,7 @@ void ImpTypeChecker::add_fundec(FunDec *fd)
     }
     has_main = true;
   }
-  
+
   env.add_var(fd->fname, funtype);
   ;
   return;
@@ -175,20 +175,20 @@ void ImpTypeChecker::add_fundec(FunDec *fd)
 
 void ImpTypeChecker::visit(FunDec *fd)
 {
-  
+  cout << "FunDec" << endl;
   env.add_level();
   ImpType funtype = env.lookup(fd->fname);
   ImpType rtype, ptype;
   rtype.set_basic_type(funtype.types.back());
   list<string>::iterator it;
   int i = 0;
-  
+
   for (it = fd->vars.begin(); it != fd->vars.end(); ++it, i++)
   {
     ptype.set_basic_type(funtype.types[i]);
     env.add_var(*it, ptype);
   }
-  
+
   // env.add_var("return", rtype);
   fd->body->accept(this);
   env.remove_level();
@@ -197,7 +197,7 @@ void ImpTypeChecker::visit(FunDec *fd)
 
 void ImpTypeChecker::visit(StatementList *s)
 {
-  cout << "$StatementList" << endl;
+
   list<Stm *>::iterator it;
   for (it = s->stms.begin(); it != s->stms.end(); ++it)
   {
@@ -228,7 +228,7 @@ void ImpTypeChecker::visit(AssignStatement *s)
 
 void ImpTypeChecker::visit(PrintStatement *s)
 {
-
+  cout << "$PrintStatement" << endl;
   s->e1->accept(this);
   s->e2->accept(this);
   sp_decr(2);
@@ -238,6 +238,7 @@ void ImpTypeChecker::visit(PrintStatement *s)
 
 void ImpTypeChecker::visit(IfStatement *s)
 {
+  cout << "$IfStatement" << endl;
   if (!s->condition->accept(this).match(booltype))
   {
     cout << "Expresion conditional en IF debe de ser bool" << endl;
@@ -252,6 +253,7 @@ void ImpTypeChecker::visit(IfStatement *s)
 
 void ImpTypeChecker::visit(WhileStatement *s)
 {
+  cout << "$WhileStatement" << endl;
   if (!s->condition->accept(this).match(booltype))
   {
     cout << "Expresion conditional en IF debe de ser bool" << endl;
@@ -284,18 +286,24 @@ void ImpTypeChecker::visit(ReturnStatement *s)
 
 void ImpTypeChecker::visit(ForStatement *s)
 {
-  if (!s->start->accept(this).match(inttype) || !s->end->accept(this).match(inttype) || !s->step->accept(this).match(inttype))
+  cout << "$ForStatement" << endl;
+  if (!s->start->accept(this).match(i32type) || !s->end->accept(this).match(i32type)) //|| !s->step->accept(this).match(i32type)
   {
-    cout << "Expresiones en for deben de ser int" << endl;
+    cout << "Expresiones en for deben de ser i32type" << endl;
     exit(0);
   }
+  cout << "$ForStatementEND1" << endl;
   sp_decr(3);
+  cout << "$ForStatementEND2" << endl;
+
   s->b->accept(this);
+  cout << "$ForStatementEND" << endl;
   return;
 }
 
 ImpType ImpTypeChecker::visit(BinaryExp *e)
 {
+  cout << "$BinaryExp" << endl;
   ImpType t1 = e->left->accept(this);
   ImpType t2 = e->right->accept(this);
   if (!t1.match(i32type) || !t2.match(i32type))
@@ -357,7 +365,7 @@ ImpType ImpTypeChecker::visit(IdentifierExp *e)
     return env.lookup(e->name);
   else
   {
-    cout << "Variable indefinida: " << e->name << endl;
+    cout << "Variable indefinida:2 " << e->name << endl;
     exit(0);
   }
 }

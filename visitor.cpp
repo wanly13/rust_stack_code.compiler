@@ -158,7 +158,6 @@ int PrintVisitor::visit(i64Exp *exp)
     return 0;
 }
 
-
 int PrintVisitor::visit(BoolExp *exp)
 {
     if (exp->value)
@@ -209,7 +208,6 @@ void PrintVisitor::visit(IfStatement *stm)
         printIndent();
         cout << "} else {" << endl;
         stm->els->accept(this);
-        
     }
     printIndent();
     cout << "}";
@@ -251,14 +249,16 @@ void PrintVisitor::visit(WhileStatement *stm)
 void PrintVisitor::visit(ForStatement *stm)
 {
     cout << "for ";
+    cout << stm->var ;
+    cout << " in ";
+    cout << "(";
     stm->start->accept(this);
-    cout << " to ";
+    cout << "..";
     stm->end->accept(this);
-    // cout << " step ";
-    // stm->step->accept(this);
-    cout << " do" << endl;
+    cout << ")";
+    cout << " {" << endl;
     stm->b->accept(this);
-    cout << "endfor";
+    cout << "}" << endl;
 }
 
 void PrintVisitor::visit(VarDec *stm)
